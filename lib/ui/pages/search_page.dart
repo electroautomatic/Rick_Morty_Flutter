@@ -8,6 +8,7 @@ import 'package:flutter_rick_morty/bloc/character_bloc.dart';
 import 'package:flutter_rick_morty/data/models/chracter.dart';
 import 'package:flutter_rick_morty/ui/wigets/custom_list_tile.dart';
 import 'package:freeze/freeze.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -29,15 +30,30 @@ class _SearchPageState extends State<SearchPage> {
 
   Timer? searchBebounce;
 
+// //HydratedBlocOverrides
+  final _storage = HydratedBloc.storage;
+
   @override
   void initState() {
-    if (_currentresults.isEmpty) {
-      context
-          .read<CharacterBloc>()
-          .add(const CharacterEvent.fetch(name: '', page: 1));
+    if (_storage.runtimeType.toString().isEmpty) {
+      if (_currentresults.isEmpty) {
+        context
+            .read<CharacterBloc>()
+            .add(CharacterEvent.fetch(name: '', page: _currentPage));
+      }
     }
     super.initState();
   }
+
+  // @override
+  // void initState() {
+  //   if (_currentresults.isEmpty) {
+  //     context
+  //         .read<CharacterBloc>()
+  //         .add(const CharacterEvent.fetch(name: '', page: 1));
+  //   }
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
